@@ -7,6 +7,8 @@ using System.Web.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using api;
 using api.Controllers;
+using Npgsql;
+using System.Configuration;
 
 namespace api.Tests.Controllers
 {
@@ -14,68 +16,31 @@ namespace api.Tests.Controllers
     public class Experiment
     {
         [TestMethod]
-        public void Get()
+        public void CallPostgres()
         {
-            // Arrange
-            ValuesController controller = new ValuesController();
+            string ConnectionString = ConfigurationManager.ConnectionStrings["PostgresDotNet"].ConnectionString;
+            using (NpgsqlConnection conn = new NpgsqlConnection(ConnectionString))
+            {
+                conn.Open();
 
-            // Act
-            IEnumerable<string> result = controller.Get();
+                var cmd = new NpgsqlCommand("delete from test_table;", conn);
+                cmd.ExecuteNonQuery();
 
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count());
-            Assert.AreEqual("value1", result.ElementAt(0));
-            Assert.AreEqual("value2", result.ElementAt(1));
+                cmd = new NpgsqlCommand("insert into test_table(c1) values('Abc');", conn);
+                cmd.ExecuteNonQuery();
+
+                cmd = new NpgsqlCommand("SELECT * FROM test_table where c1 = 'Abc';", conn);
+                NpgsqlDataReader reader = cmd.ExecuteReader();
+
+                var count = 0;
+                while (reader.Read())
+                {
+                    count++;
+                    Assert.AreEqual<string>("Abc", reader["c1"] as string);
+                }
+                Assert.AreEqual(1, count);
+            }
         }
 
-        [TestMethod]
-        public void GetById()
-        {
-            // Arrange
-            ValuesController controller = new ValuesController();
-
-            // Act
-            string result = controller.Get(5);
-
-            // Assert
-            Assert.AreEqual("value", result);
-        }
-
-        [TestMethod]
-        public void Post()
-        {
-            // Arrange
-            ValuesController controller = new ValuesController();
-
-            // Act
-            controller.Post("value");
-
-            // Assert
-        }
-
-        [TestMethod]
-        public void Put()
-        {
-            // Arrange
-            ValuesController controller = new ValuesController();
-
-            // Act
-            controller.Put(5, "value");
-
-            // Assert
-        }
-
-        [TestMethod]
-        public void Delete()
-        {
-            // Arrange
-            ValuesController controller = new ValuesController();
-
-            // Act
-            controller.Delete(5);
-
-            // Assert
-        }
     }
 }
