@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
+using System.Net.Http.Headers;
+using System.Net.Http.Formatting;
 
 namespace api
 {
@@ -25,6 +27,9 @@ namespace api
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            // Force JSON format only
+            config.Services.Replace(typeof(IContentNegotiator), new JsonContentNegotiator());
         }
     }
 }
