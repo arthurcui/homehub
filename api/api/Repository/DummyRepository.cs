@@ -15,21 +15,37 @@ namespace api.Repository
             _listings = new List<Listing>();
             _listings.Add(new Listing
             {
-                Address = "888 Canada Way, Vancouver, BC V8V8V8",
-                ListingPrice = 1680000.00m,
+                Address = new Address
+                {
+                    Number = "888",
+                    Street = "Canada Way",
+                    City = "Vancouver",
+                    Province = "BC",
+                    PostalCode = "V8V8V8",
+                    Country = "Canada"
+                },
+                ListPrice = 1680000.00m,
                 LotSize = 10000.00m,
-                TotalFloorSize = 3888.00m,
-                BedroomCount = 8,
+                FinishedTotal = 3888.00m,
+                NumberOfBedrooms = 8,
                 Age = 18
             });
             _listings.Add(new Listing
             {
-                Address = "1888 Canada Way, Vancouver, BC V8V8V8",
-                ListingPrice = 11680000.00m,
-                LotSize = 110000.00m,
-                TotalFloorSize = 13888.00m,
-                BedroomCount = 18,
-                Age = 118
+                Address = new Address
+                {
+                    Unit = "8",
+                    Number = "518",
+                    Street = "Williams Road",
+                    City = "Richmond",
+                    Province = "BC",
+                    PostalCode = "V7E1K1",
+                    Country = "Canada"
+                },
+                ListPrice = 980000.00m,
+                FinishedTotal = 1888.00m,
+                NumberOfBedrooms = 4,
+                Age = 8
             });
         }
 

@@ -231,6 +231,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ListingsController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DomainObjects\Address.cs" />
+    <Compile Include="DomainObjects\Bathroom.cs" />
+    <Compile Include="DomainObjects\Room.cs" />
     <Compile Include="DomainObjects\Listing.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
