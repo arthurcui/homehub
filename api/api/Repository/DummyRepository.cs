@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using api.DomainObjects;
 
 namespace api.Repository
@@ -47,11 +46,79 @@ namespace api.Repository
                 NumberOfBedrooms = 4,
                 Age = 8
             });
+            _listings.Add(new Listing
+            {
+                Address = new Address
+                {
+                    Street = "1000 10"
+                },
+                ListPrice = 1000,
+                NumberOfBedrooms = 10,
+            });
+            _listings.Add(new Listing
+            {
+                Address = new Address
+                {
+                    Street = "2000 10"
+                },
+                ListPrice = 2000,
+                NumberOfBedrooms = 10,
+            });
+            _listings.Add(new Listing
+            {
+                Address = new Address
+                {
+                    Street = "1000 20"
+                },
+                ListPrice = 1000,
+                NumberOfBedrooms = 20,
+            });
+            _listings.Add(new Listing
+            {
+                Address = new Address
+                {
+                    Street = "2000 20"
+                },
+                ListPrice = 2000,
+                NumberOfBedrooms = 20,
+            });
         }
 
-        public IEnumerable<Listing> GetAllListings()
+        public IEnumerable<Listing> SearchListings(QueryParameter parameter)
         {
-            return _listings;
+            IEnumerable<Listing> result = _listings;
+
+            if(parameter.Status != null)
+                result = result.Where(listing => parameter.Status.Contains(listing.Status));
+
+            if (parameter.ListPriceLow != null)
+                result = result.Where(listing => listing.ListPrice >= parameter.ListPriceLow);
+
+            if (parameter.ListPriceHigh != null)
+                result = result.Where(listing => listing.ListPrice <= parameter.ListPriceHigh);
+
+            IOrderedEnumerable<Listing> orderedResult = null;
+            if (parameter.SortBy != null)
+            {
+                orderedResult = result.OrderBy(listing => 0);
+                foreach (var sortField in parameter.SortBy)
+                    switch (sortField.ToLowerInvariant())
+                    {
+                        case "price":
+                            orderedResult = parameter.SortOrder == 0 ? orderedResult.ThenBy(listing => listing.ListPrice) : orderedResult.ThenByDescending(listing => listing.ListPrice);
+                            break;
+                        case "bedroom":
+                            orderedResult = parameter.SortOrder == 0 ? orderedResult.ThenBy(listing => listing.NumberOfBedrooms) : orderedResult.ThenByDescending(listing => listing.NumberOfBedrooms);
+                            break;
+                    }
+            }
+
+            if(orderedResult != null)
+                result = orderedResult.Skip((int)parameter.Offset).Take((int)parameter.Limit);
+            else
+                result = result.Skip((int)parameter.Offset).Take((int)parameter.Limit);
+
+            return result;
         }
     }
 }

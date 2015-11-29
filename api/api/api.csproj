@@ -235,6 +235,7 @@
     <Compile Include="DomainObjects\Bathroom.cs" />
     <Compile Include="DomainObjects\Room.cs" />
     <Compile Include="DomainObjects\Listing.cs" />
+    <Compile Include="DomainObjects\QueryParameter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

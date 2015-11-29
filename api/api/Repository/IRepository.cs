@@ -9,6 +9,6 @@ namespace api.Repository
 {
     public interface IRepository
     {
-        IEnumerable<Listing> GetAllListings();
+        IEnumerable<Listing> SearchListings(QueryParameter criteria);
     }
 }
